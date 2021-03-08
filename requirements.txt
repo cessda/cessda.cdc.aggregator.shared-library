@@ -12,3 +12,5 @@ py12flogging==0.5.0
 git+https://bitbucket.org/tietoarkisto/kuha_common@cdcagg#egg=kuha_common
 # Kuha Document Store
 git+https://bitbucket.org/tietoarkisto/kuha_document_store@cdcagg#egg=kuha_document_store
+# Kuha Client
+git+https://bitbucket.org/tietoarkisto/kuha_client@cdcagg#egg=kuha_client

@@ -1,11 +1,15 @@
 from kuha_document_store.database import (
     DocumentStoreDatabase,
-    mongodburi,
-    validate  # TODO proper validate
+    mongodburi
 )
+from kuha_document_store import validation
 from cdcagg import (
     iter_collections,
     record_by_collection_name
+)
+from cdcagg.records import (
+    Study,
+    RecordBase
 )
 
 
@@ -16,14 +20,44 @@ class CDCAggDatabase(DocumentStoreDatabase):
 
 
 def db_from_settings(settings):
-    collections = list(iter_collections())
+    metadata_schema_items = {
+        **validation.default_schema_item(RecordBase._metadata.attr_created.name),
+        **validation.default_schema_item(RecordBase._metadata.attr_updated.name),
+        **validation.default_schema_item(RecordBase._metadata.attr_deleted.name, nullable=True),
+        **validation.default_schema_item(RecordBase._metadata.attr_cmm_type.name),
+        # TODO ENUM schema item
+        **validation.default_schema_item(RecordBase._metadata.attr_status.name),
+        # TODO float schema item
+        **validation.default_schema_item(RecordBase._metadata.attr_schema_version.name)
+    }
+    provenance_schema_items = {
+        **validation.default_schema_item(RecordBase._provenance.attr_base_url.name),
+        **validation.default_schema_item(RecordBase._provenance.attr_identifier.name),
+        **validation.default_schema_item(RecordBase._provenance.attr_datestamp.name),
+        **validation.default_schema_item(RecordBase._provenance.attr_metadata_namespace.name),
+        **validation.default_schema_item(RecordBase._provenance.sub_name.name),
+        **validation.bool_schema_item(RecordBase._provenance.attr_altered.name),
+        **validation.bool_schema_item(RecordBase._provenance.attr_direct.name)
+    }
+    base_schema = {
+        **validation.dict_schema_item(RecordBase._metadata.path, metadata_schema_items),
+        **validation.container_schema_item(RecordBase._provenance.path, provenance_schema_items)}
+    validation.add_schema(Study.collection,
+                          validation.RecordValidationSchema(
+                              Study,
+                              base_schema,
+                              validation.identifier_schema_item(Study.study_number.path),
+                              validation.uniquelist_schema_item(Study.persistent_identifiers.path),
+                              validation.bool_schema_item(Study.universes.attr_included.path)
+                          ))
     reader_uri = mongodburi(*settings.replica, database=settings.database_name,
                             credentials=(settings.database_user_reader,
                                          settings.database_pass_reader))
     editor_uri = mongodburi(*settings.replica, database=settings.database_name,
                             credentials=(settings.database_user_editor,
                                          settings.database_pass_editor))
-    return CDCAggDatabase(collections=collections, name=settings.database_name,
+    return CDCAggDatabase(collections=list(iter_collections()),
+                          name=settings.database_name,
                           reader_uri=reader_uri, editor_uri=editor_uri)
 
 
