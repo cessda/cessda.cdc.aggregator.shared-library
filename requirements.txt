@@ -14,3 +14,5 @@ git+https://bitbucket.org/tietoarkisto/kuha_common@cdcagg#egg=kuha_common
 git+https://bitbucket.org/tietoarkisto/kuha_document_store@cdcagg#egg=kuha_document_store
 # Kuha Client
 git+https://bitbucket.org/tietoarkisto/kuha_client@cdcagg#egg=kuha_client
+# Kuha OAI-PMH Repo Handler
+git+https://bitbucket.org/tietoarkisto/kuha_oai_pmh_repo_handler@cdcagg#egg=kuha_oai_pmh_repo_handler

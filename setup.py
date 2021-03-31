@@ -16,6 +16,10 @@ setup(name='cdcagg',
       author='Toni Sissala',
       author_email='toni.sissala@tuni.fi',
       packages=find_packages(),
+      entry_points={
+        'cdcagg.oai.metadataformats': [
+            'AggOAIDDI25MetadataFormat = cdcagg.oaipmh.metadataformats:AggOAIDDI25MetadataFormat',
+            'AggDCMetadataFormat = cdcagg.oaipmh.metadataformats:AggDCMetadataFormat']},
       classifiers=(
           'Development Status :: 1 - Planning',
           'Environment :: Console',

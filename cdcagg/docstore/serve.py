@@ -15,25 +15,24 @@ from . import controller
 _logger = logging.getLogger(__name__)
 
 
-def add_cli_args(parser):
-    parser.add('-p', '--port',
-               help='Port to listen to',
-               default=6001, type=int, env_var='DOCSTORE_PORT')
-    parser.add('--api-version',
-               help='HTTP API version gets prepended to URLs',
-               default='v0', type=str, env_var='DOCSTORE_API_VERSION')
-
-
-def main():
-    parser = conf.load(prog='cdcagg.docstore', package='cdcagg',
-                       env_var_prefix='CDCAGG_')
+def configure():
+    conf.load(prog='cdcagg.docstore', package='cdcagg', env_var_prefix='CDCAGG_')
     conf.add_print_arg()
     conf.add_config_arg()
     conf.add_loglevel_arg()
-    add_cli_args(parser)
+    conf.add('-p', '--port',
+             help='Port to listen to',
+             default=6001, type=int, env_var='DOCSTORE_PORT')
+    conf.add('--api-version',
+             help='HTTP API version gets prepended to URLs',
+             default='v0', type=str, env_var='DOCSTORE_API_VERSION')
     server.add_cli_args()
-    controller.add_cli_args(parser)
-    settings = conf.get_conf()
+    controller.add_cli_args(conf)
+    return conf.get_conf()
+
+
+def main():
+    settings = configure()
     if settings.print_configuration:
         print('Print active configuration and exit\n')
         conf.print_conf()

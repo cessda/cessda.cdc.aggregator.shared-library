@@ -1,4 +1,5 @@
 from itertools import chain
+from uuid import uuid4
 from kuha_common.document_store.field_types import FieldTypeFactory
 from kuha_common.document_store import records
 
@@ -11,14 +12,29 @@ class RecordBase(records.RecordBase):
                                           'direct',
                                           'metadata_namespace'],
                                    localizable=False)
-    # TODO __init__ & update & create
+    _aggregator_identifier = FieldTypeFactory('_aggregator_identifier',
+                                              localizable=False, single_value=True)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, document_store_dictionary=None):
         self._provenance = self._provenance.fabricate()
-        super().__init__(*args, **kwargs)
+        self._aggregator_identifier = self._aggregator_identifier.fabricate()
+        if document_store_dictionary is not None:
+            self._import_provenance(document_store_dictionary)
+        super().__init__(document_store_dictionary)
+
+    def _new_record(self):
+        super()._new_record()
+        self._aggregator_identifier.add_value(uuid4().hex)
+
+    def _import_provenance(self, dct):
+        if self._provenance.name in dct:
+            self._provenance.import_records(dct[self._provenance.name])
+        if self._aggregator_identifier.name in dct:
+            self._aggregator_identifier.import_records(dct[self._aggregator_identifier.name])
 
     def export_provenance_dict(self):
         dct = self._provenance.export_dict()
+        dct.update(self._aggregator_identifier.export_dict())
         records.dig_and_set(dct, records.path_join(self._provenance.get_name(),
                                                    self._provenance.sub_element.get_name()),
                             records.datetime_to_datestamp)

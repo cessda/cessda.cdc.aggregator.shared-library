@@ -25,7 +25,6 @@ def get_client(conn_uri):
 
 
 def _collection_validator(collection_name, record_class, required=None):
-    # TODO how about record_status. Should it be required?
     required = required or []
     required.extend([attr.path for attr in [
         record_class._metadata.attr_created,

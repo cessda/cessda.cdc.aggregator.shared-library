@@ -40,6 +40,7 @@ def db_from_settings(settings):
         **validation.bool_schema_item(RecordBase._provenance.attr_direct.name)
     }
     base_schema = {
+        **validation.identifier_schema_item(RecordBase._aggregator_identifier.path),
         **validation.dict_schema_item(RecordBase._metadata.path, metadata_schema_items),
         **validation.container_schema_item(RecordBase._provenance.path, provenance_schema_items)}
     validation.add_schema(Study.collection,
@@ -64,38 +65,38 @@ def db_from_settings(settings):
 def add_cli_args(parser):
     parser.add('--replica', 
                help='MongoDB replica replica host + port. Repeat for multiple replicas. For example: localhost:27017',
-               env_var='CDCAGG_DBREPLICAS',
+               env_var='DBREPLICAS',
                action='append',
                required=True,
                type=str)
     parser.add('--replicaset',
                help='MongoDB replica set name',
-               env_var='CDCAGG_DBREPLICASET',
+               env_var='DBREPLICASET',
                default='rs_cdcagg',
                type=str)
     parser.add('--database-name',
                help='Database name',
                default='cdcagg',
-               env_var='CDCAGG_DBNAME',
+               env_var='DBNAME',
                type=str)
     parser.add('--database-user-reader',
                help='Username for reading from the database',
                default='reader',
-               env_var='CDCAGG_DBUSER_READER',
+               env_var='DBUSER_READER',
                type=str)
     parser.add('--database-pass-reader',
                help='Password for database-user-reader',
                default='reader',
-               env_var='CDCAGG_DBPASS_READER',
+               env_var='DBPASS_READER',
                type=str)
     parser.add('--database-user-editor',
                help='Username for editing the database',
                default='editor',
-               env_var='CDCAGG_DBUSER_EDITOR',
+               env_var='DBUSER_EDITOR',
                type=str)
     parser.add('--database-pass-editor',
                help='Password for database-user-editor',
                default='editor',
-               env_var='CDCAGG_DBPASS_EDITOR',
+               env_var='DBPASS_EDITOR',
                type=str)
 

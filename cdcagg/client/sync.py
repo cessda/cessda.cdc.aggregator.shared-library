@@ -1,4 +1,5 @@
 import sys
+from py12flogging.log_formatter import setup_app_logging
 from kuha_common.query import (
     QueryController,
     FilterKeyConstants
@@ -6,7 +7,10 @@ from kuha_common.query import (
 from kuha_common import conf
 import kuha_client
 from cdcagg import Study
-from cdcagg.mappings import DDI25RecordParser
+from cdcagg.mappings import (
+    DDI25RecordParser,
+    DDI31RecordParser
+)
 
 
 class StudyMethods(kuha_client.CollectionMethods):
@@ -39,17 +43,24 @@ class StudyMethods(kuha_client.CollectionMethods):
                                                             new_dict, old.get_id())
 
 
-def cli():
-    parser = conf.load(prog='cdcagg.client.sync', package='cdcagg', env_var_prefix='CDCAGG_')
+def configure():
+    conf.load(prog='cdcagg.client.sync', package='cdcagg', env_var_prefix='CDCAGG_')
     conf.add_print_arg()
     conf.add_config_arg()
-    parser.add('--document-store-url', type=str)
-    parser.add('--no-remove', action='store_true')
-    parser.add('--file-cache', type=str)
-    parser.add('paths', nargs='+')
+    conf.add_loglevel_arg()
+    conf.add('--document-store-url', type=str)
+    conf.add('--no-remove', action='store_true')
+    conf.add('--file-cache', type=str)
+    conf.add('paths', nargs='+')
     settings = conf.get_conf()
+    setup_app_logging(conf.get_package(), loglevel=settings.loglevel)
+    return settings
+
+
+def cli():
+    settings = configure()
     remove_absent = settings.no_remove is False
-    parsers = [DDI25RecordParser]
+    parsers = [DDI25RecordParser, DDI31RecordParser]
     collections_methods = [StudyMethods]
     if settings.file_cache:
         with kuha_client.open_file_logging_cache(settings.file_cache) as cache:
