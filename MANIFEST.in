@@ -1,7 +1,9 @@
+recursive-include cdcagg/oaipmh/templates *.xml
+recursive-include tests/*.py
 include VERSION
 include *.rst
+include *.md
 include *.txt
 include tox.ini
 include .pylintrc
 include .coveragerc
-include tests/*.py

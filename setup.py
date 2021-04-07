@@ -15,7 +15,8 @@ setup(name='cdcagg',
       license='EUPL v1.2',
       author='Toni Sissala',
       author_email='toni.sissala@tuni.fi',
-      packages=find_packages(),
+      packages=find_packages(exclude=['tests']),
+      include_package_data=True,
       entry_points={
         'cdcagg.oai.metadataformats': [
             'AggOAIDDI25MetadataFormat = cdcagg.oaipmh.metadataformats:AggOAIDDI25MetadataFormat',
