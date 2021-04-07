@@ -180,8 +180,8 @@ def configure():
     conf.add_print_arg()
     conf.add_config_arg()
     add_cli_args(parser)
-    conf.add_arg('operations', nargs='+', help='Operations to perform',
-                 choices=list(_ops.operations.keys()))
+    conf.add('operations', nargs='+', help='Operations to perform',
+             choices=list(_ops.operations.keys()))
     return conf.get_conf()
 
 
