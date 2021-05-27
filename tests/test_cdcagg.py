@@ -1,5 +1,5 @@
 from unittest import TestCase
-from cdcagg import list_collection_names
+from cdcagg_common import list_collection_names
 
 
 class TestCdcAggPackage(TestCase):

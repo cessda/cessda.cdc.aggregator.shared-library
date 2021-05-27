@@ -1,6 +1,6 @@
 from kuha_common.document_store.mappings import ddi
 from kuha_common.document_store.records import datetime_now
-from cdcagg.records import (
+from cdcagg_common.records import (
     Study
 )
 

@@ -100,7 +100,7 @@ node(node_name) {
                 echo 'Run pylint'
                 sh """
                 . ./${pylintEnvName}/bin/activate
-                pylint -f parseable cdcagg | tee ${pylint_report_path}
+                pylint -f parseable cdcagg_common | tee ${pylint_report_path}
                 """
             }
             stage('Archive PyLint Report') {
