@@ -35,9 +35,6 @@ class RecordBase(records.RecordBase):
     def export_provenance_dict(self):
         dct = self._provenance.export_dict()
         dct.update(self._aggregator_identifier.export_dict())
-        records.dig_and_set(dct, records.path_join(self._provenance.get_name(),
-                                                   self._provenance.sub_element.get_name()),
-                            records.datetime_to_datestamp)
         return dct
 
     def export_dict(self, include_provenance=True, **kwargs):
