@@ -162,7 +162,7 @@ class TestDDI122RecordParser(_Wrapper.RecordParserTestBase):
     _valid_study_idno = 'some_idno'
     _valid_study_title = 'some study'
     _valid_study = ('<codeBook xmlns="http://www.icpsr.umich.edu/DDI">'
-                    '<stdyDscr><citation><titlStmt>'
+                    '<stdyDscr xmlns=""><citation><titlStmt>'
                     '<titl>some study</titl>'
                     '<IDNo>some idno</IDNo>'
                     '</titlStmt></citation></stdyDscr></codeBook>')
