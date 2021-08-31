@@ -29,14 +29,14 @@ def _invalid_root(inner_xml=''):
     return ('<invalid_root>' + inner_xml + '</invalid_root>')
 
 
-class TestProvenanceGetter(TestCase):
+class TestProvenanceInfo(TestCase):
 
     def test_gets_direct_provenance_info(self):
         root_element = ElementTree.fromstring(_valid_root(
             base_url='http://some.base.url', identifier='some_identifier',
             datestamp='2015-01-20T13:32:15+0000'))
-        getter = mappings.provenance_getter(root_element, 'somenamespace')
-        rval = getter()
+        prov = mappings.ProvenanceInfo(root_element, 'somenamespace')
+        rval = prov.full()
         self.assertEqual(len(rval), 1)
         prov = rval.pop()
         self.assertEqual(prov['base_url'], 'http://some.base.url')
@@ -69,8 +69,8 @@ class TestProvenanceGetter(TestCase):
         root_element = ElementTree.fromstring(_valid_root(
             base_url='http://other.base.url', identifier='other_identifier',
             datestamp='2016-01-20T13:32:15+0000', about=about_xml))
-        getter = mappings.provenance_getter(root_element, 'othernamespace')
-        rval = getter()
+        prov_info = mappings.ProvenanceInfo(root_element, 'othernamespace')
+        rval = prov_info.full()
         self.assertEqual(len(rval), 3)
         exp_provs = [
             {'base_url': 'http://other.base.url',
@@ -125,11 +125,14 @@ class _Wrapper:
                 self.ParserClass.from_string(_valid_root(metadata=self._invalid_md))
 
         def test_returns_studies(self):
-            studies = list(self.ParserClass.from_string(_valid_root(metadata=self._valid_study)).studies)
+            studies = list(self.ParserClass.from_string(_valid_root(metadata=self._valid_study,
+                                                                    base_url='some.base.url',
+                                                                    identifier='some/oai/id')).studies)
             self.assertEqual(len(studies), 1)
             study = studies.pop()
-            self.assertEqual(study.study_number.get_value(), self._valid_study_idno)
+            self.assertEqual(study.study_number.get_value(), 'some.base.url__some2Foai2Fid')
             self.assertEqual(study.study_titles[0].get_value(), self._valid_study_title)
+            self.assertEqual(study.identifiers[0].get_value(), self._valid_study_idno)
 
         @mock.patch.object(mappings, 'datetime_to_datestamp')
         def test_returned_study_contain_proper_provenance(self, mock_datetime_to_datestamp):
@@ -159,7 +162,7 @@ class TestDDI122RecordParser(_Wrapper.RecordParserTestBase):
     _mdns = 'http://www.icpsr.umich.edu/DDI'
     _valid_md = '<codeBook xmlns="http://www.icpsr.umich.edu/DDI"></codeBook>'
     _invalid_md = '<codeBook></codeBook>'
-    _valid_study_idno = 'some_idno'
+    _valid_study_idno = 'some idno'
     _valid_study_title = 'some study'
     _valid_study = ('<codeBook xmlns="http://www.icpsr.umich.edu/DDI">'
                     '<stdyDscr xmlns=""><citation><titlStmt>'
@@ -182,7 +185,7 @@ class TestDDI25RecordParser(_Wrapper.RecordParserTestBase):
                    'xsi:schemaLocation="ddi:codebook:2_5 http://www.ddialliance.org/'
                    'Specification/DDI-Codebook/2.5/XMLSchema/codebook.xsd">'
                    '</codeBook>')
-    _valid_study_idno = 'other_idno'
+    _valid_study_idno = 'other idno'
     _valid_study_title = 'other study'
     _valid_study = ('<codeBook xmlns="ddi:codebook:2_5" version="2.5" '
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
@@ -249,7 +252,7 @@ class TestDDI31RecordParser(_Wrapper.RecordParserTestBase):
                    'XMLSchema/instance.xsd">'
                    '<s:StudyUnit></s:StudyUnit>'
                    '</ddi:DDIInstance>')
-    _valid_study_idno = 'yet_another_idno'
+    _valid_study_idno = 'yet another idno'
     _valid_study_title = 'yet another study'
     _valid_study = ('<ddi:DDIInstance xmlns:m2="ddi:physicaldataproduct_ncube_tabular:3_1" xmlns:r="ddi:reusable:3_1" '
                     'xmlns:m3="ddi:physicaldataproduct_ncube_inline:3_1" '
