@@ -21,6 +21,11 @@ with open('VERSION', 'r') as file_obj:
     version = file_obj.readline().strip()
 
 
+requires = [
+    'kuha_common>=1.0.0'
+]
+
+
 setup(name='cdcagg_common',
       version=version,
       url='https://bitbucket.org/cessda/cessda.cdc.aggregator.shared-library',
@@ -30,6 +35,7 @@ setup(name='cdcagg_common',
       author_email='toni.sissala@tuni.fi',
       packages=find_packages(exclude=['tests']),
       include_package_data=True,
+      install_requires=requires,
       classifiers=(
           'Development Status :: 1 - Planning',
           'Environment :: Console',

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the CDC Aggregator will be documented in this file.
+All notable changes to the CDC Aggregator Shared Library will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
@@ -26,16 +26,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Security
 
-## [0.0.1] - 2021-0X-0X
+## [0.1.0] - 2021-09-21
 
 ### Added
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+Initial codebase.

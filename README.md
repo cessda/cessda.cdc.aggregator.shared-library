@@ -13,4 +13,8 @@
 [![Technical Debt](https://sonarqube.cessda.eu/api/project_badges/measure?project=cessda.cdc.aggregator.shared-library&metric=sqale_index)](https://sonarqube.cessda.eu/dashboard?id=cessda.cdc.aggregator.shared-library)
 [![Vulnerabilities](https://sonarqube.cessda.eu/api/project_badges/measure?project=cessda.cdc.aggregator.shared-library&metric=vulnerabilities)](https://sonarqube.cessda.eu/dashboard?id=cessda.cdc.aggregator.shared-library)
 
-Work in progress
+This is a Python library containing shared code for the CESSDA CDC Aggregator.
+
+## License
+
+See the [LICENSE](LICENSE.txt) file.
