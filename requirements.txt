@@ -1,6 +1,6 @@
 # Indirect
 py12flogging==0.5.0
-ConfigArgParse==1.4.1
+ConfigArgParse==1.5.3
 tornado==6.1
 
 # Direct
