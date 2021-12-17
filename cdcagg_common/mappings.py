@@ -10,7 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """XML parsers that read XML and map the metadata to CDCAGG records.
 """
 from urllib.parse import quote_plus
@@ -41,8 +40,22 @@ def _indirect_provenances_from_oaixml(origdesc_el):
 
 
 class ProvenanceInfo:
+    """Helper class to map OAI-PMH source envelope XML to provenance info.
 
+    This is used for mapping purposes only. The provenance in
+    :mod:`cdcagg_common.records` is accessible via record instances
+    and does not use this class.
+    """
     def __init__(self, root_element, metadata_namespace):
+        """Initiate ProvenanceInfo object with XML root element and
+        direct source metadata namespace
+
+        :param root_element: XML root node.
+        :type root_element: :obj:`xml.etree.ElementTree.Element`
+        :param str metadata_namespace: Direct metadata namespace.
+        :returns: Instance of ProvenanceInfo
+        :rtype: :obj:`ProvenanceInfo`
+        """
         self._root_element = root_element
         self._metadata_namespace = metadata_namespace
         self._direct_provenance = {
@@ -58,13 +71,30 @@ class ProvenanceInfo:
 
     @property
     def base_url(self):
+        """Get direct base url.
+
+        :returns: Direct base url
+        :rtype: str
+        """
         return self._direct_provenance['base_url']
 
     @property
     def identifier(self):
+        """Get direct identifier.
+
+        :returns: Direct identifier.
+        :rtype: str
+        """
         return self._direct_provenance['identifier']
 
     def full(self):
+        """Get full provenance info including indirect provenances.
+
+        Returned value is a list in which the first item is the direct provenance.
+
+        :returns: Full provenance.
+        :rtype: list
+        """
         provenances = [self._direct_provenance]
         prov_el = self._root_element.find('./oai:GetRecord/oai:record/oai:about/oai_p:provenance', OAI_NS)
         if prov_el:
@@ -128,6 +158,13 @@ class DDI122NesstarRecordParser(_aggregator_parser_factory(ddi.DDI122NesstarReco
     and map it to CDCAGG records."""
 
     def __init__(self, root_element):
+        """Initiate DDI122NesstarRecordParser with XML root node.
+
+        :param root_element: XML root node.
+        :type root_element: :obj:`xml.etree.ElementTree.Element`
+        :returns: Instance of DDI122NesstarRecordParser
+        :rtype: :obj:`DDI122NesstarRecordParser`
+        """
         super().__init__(self._ddic_init(root_element,
                                          {'ddi': 'http://www.icpsr.umich.edu/DDI'}))
 
@@ -137,6 +174,13 @@ class DDI25RecordParser(_aggregator_parser_factory(ddi.DDI25RecordParser)):
     and map it to CDCAGG records."""
 
     def __init__(self, root_element):
+        """Initiate DDI25RecordParser with XML root node.
+
+        :param root_element: XML root node.
+        :type root_element: :obj:`xml.etree.ElementTree.Element`
+        :returns: Instance of DDI25RecordParser
+        :rtype: :obj:`DDI25RecordParser`
+        """
         super().__init__(self._ddic_init(root_element,
                                          {'ddi': 'ddi:codebook:2_5'}))
 
@@ -146,6 +190,13 @@ class DDI31RecordParser(_aggregator_parser_factory(ddi.DDI31RecordParser)):
     and map it to CDCAGG records."""
 
     def __init__(self, root_element):
+        """Initiate DDI31RecordParser with XML root node.
+
+        :param root_element: XML root node.
+        :type root_element: :obj:`xml.etree.ElementTree.Element`
+        :returns: Instance of DDI31RecordParser
+        :rtype: :obj:`DDI31RecordParser`
+        """
         _expect_oai_pmh_root(root_element)
         _ns = {'oai': 'http://www.openarchives.org/OAI/2.0/',
                's': 'ddi:studyunit:3_1',

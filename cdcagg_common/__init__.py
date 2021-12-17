@@ -10,19 +10,37 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""This package contains common code shared among all
+CDC Aggregator components."""
 
 from .records import Study
 
 
 def list_records():
+    """List all record classes.
+
+    :returns: List of record classes
+    :rtype: list
+    """
     return [Study]
 
 
 def list_collection_names():
+    """List all collection names
+
+    :returns: List of all collection names.
+    :rtype: list
+    """
     return [Study.get_collection()]
 
 
 def record_by_collection_name(collname):
+    """Get record class by collection name
+
+    :param str collname: Collection name for lookup.
+    :returns: Record class matching collname or None if no match found.
+    :rtype: None or :class:`cdcagg_common.records.Study`
+    """
     for rec in list_records():
         if rec.get_collection() == collname:
             return rec

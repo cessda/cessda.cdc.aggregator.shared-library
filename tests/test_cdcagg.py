@@ -12,10 +12,19 @@
 # limitations under the License.
 
 from unittest import TestCase
-from cdcagg_common import list_collection_names
+import cdcagg_common
 
 
 class TestCdcAggPackage(TestCase):
 
     def test_list_collection_names_return_collection_names(self):
-        self.assertEqual(list_collection_names(), ['studies'])
+        self.assertEqual(cdcagg_common.list_collection_names(), ['studies'])
+
+    def test_list_records_lists_all_records(self):
+        self.assertEqual(cdcagg_common.list_records(), [cdcagg_common.Study])
+
+    def test_record_by_collection_returns_None(self):
+        self.assertEqual(cdcagg_common.record_by_collection_name('nonexistent'), None)
+
+    def test_record_by_collection_returns_study_class(self):
+        self.assertEqual(cdcagg_common.record_by_collection_name('studies'), cdcagg_common.Study)

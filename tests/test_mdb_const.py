@@ -10,23 +10,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Defines constants used in MongoDB"""
 
-MDB_EXISTS = '$exists'
-MDB_NOT_EQUAL = '$ne'
-MDB_LESS_THAN = '$lt'
-MDB_LESS_THAN_OR_EQUAL = '$lte'
-MDG_GREATER_THAN = '$gt'
-MDB_GREATER_THAN_OR_EQUAL = '$gte'
+"""There is no good reason to test contants defined in mdb_const.py.
+However, since the SonarQube coverage complains about missing lines
+in mdb_const.py, we'll import the package here to make sure no exceptions are
+raised on import"""
 
-MDB_OID = "$oid"
-MDB_ISODATE = '$isodate'
-MDB_REGEX = '$regex'
-MDB_TYPE = '$type'
+from unittest import TestCase
 
-MDB_AND = '$and'
 
-MDB_TYPE_DATE = 'date'
-MDB_TYPE_NULL = 'null'
-MDB_TYPE_DOUBLE = 'double'
-MDB_TYPE_STRING = 'string'
+class TestMDBConst(TestCase):
+
+    def test_no_exception_raised_on_import(self):
+        try:
+            from cdcagg_common import mdb_const
+        except Exception as exc:
+            raise AssertionError("Exception raised on import") from exc
