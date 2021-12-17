@@ -1,8 +1,7 @@
-# CDC OSMH Handler OAI-PMH
-
 ## Contributors
 
-Name            | Email                     | Role
-:---            | :---                      | :---
-Name 1  | <name DOT name AT domain DOT com>  | Role 1
-Name 2  | <name DOT name AT domain DOT com>  | Role 2
+Name             | Email                                    | Role
+:---             | :---                                     | :---
+Toni Sissala     | <toni DOT sissala AT tuni DOT fi>        | Senior IT Specialist
+John Shepherdson | <john DOT shepherdson AT cessda DOT eu>  | Platform Delivery Director
+Matthew Morris   | <matthew DOT morris AT cessda DOT eu>    | Technical Officer

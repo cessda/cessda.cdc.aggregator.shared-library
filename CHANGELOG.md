@@ -4,29 +4,9 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-*For each release, use the following sub-sections:*
-*- Added (for new features)*
-*- Changed (for changes in existing functionality)*
-*- Deprecated (for soon-to-be removed features)*
-*- Removed (for now removed features)*
-*- Fixed (for any bug fixes)*
-*- Security (in case of vulnerabilities)*
 
-## [Unreleased]
-
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
-## [0.2.0] - Unreleased
+## [0.2.0] - 2021-12-17
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5779958.svg)](https://doi.org/10.5281/zenodo.5779958)
 
 ### Changed
 
