@@ -17,7 +17,6 @@ are reflected to the MongoDB database and DocStore record validation
 is dynamically constructed by consulting the record properties.
 """
 from itertools import chain
-from uuid import uuid4
 from kuha_common.document_store.field_types import FieldTypeFactory
 from kuha_common.document_store import records
 
@@ -57,9 +56,14 @@ class RecordBase(records.RecordBase):
             self._import_provenance(document_store_dictionary)
         super().__init__(document_store_dictionary)
 
-    def _new_record(self):
-        super()._new_record()
-        self._aggregator_identifier.add_value(uuid4().hex)
+    def set_aggregator_identifier(self, value):
+        """Set aggregator identifier.
+
+        Silently overwrites previous value, if any.
+
+        :param str value: Aggregator identifier
+        """
+        self._aggregator_identifier.set_value(value)
 
     def _import_provenance(self, dct):
         if self._provenance.name in dct:
