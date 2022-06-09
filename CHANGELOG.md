@@ -5,6 +5,19 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.0] - Unreleased
+
+### Changed
+
+- Update dependency Kuha Common to 1.1.0 in requirements.txt.
+- Require Kuha Common >= 1.0.0 in setup.py.
+
+### Added
+
+- Mapping study-level metadata from DDI 3.3 format to internal data
+  model.
+
+
 ## [0.3.0] - 2022-05-18
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6577777.svg)](https://doi.org/10.5281/zenodo.6577777)
 

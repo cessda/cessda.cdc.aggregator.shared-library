@@ -14,7 +14,10 @@
 """
 from hashlib import sha256
 from urllib.parse import quote_plus
-from kuha_common.document_store.mappings import ddi
+from kuha_common.document_store.mappings import (
+    ddi,
+    exceptions
+)
 from kuha_common.document_store.records import (
     datetime_now,
     datetime_to_datestamp
@@ -106,7 +109,7 @@ class ProvenanceInfo:
 def _expect_oai_pmh_root(root_element):
     exp_root_tag = '{http://www.openarchives.org/OAI/2.0/}OAI-PMH'
     if root_element.tag != exp_root_tag:
-        raise ddi.UnknownXMLRoot(exp_root_tag, root_element.tag)
+        raise exceptions.UnknownXMLRoot(exp_root_tag, root_element.tag)
 
 
 def _add_provenances(obj, getter):
@@ -152,7 +155,7 @@ def _aggregator_parser_factory(baseclass):
             namespaces = dict(**ddi_ns, oai=OAI_NS['oai'])
             ddi_root = root_element.find('./oai:GetRecord/oai:record/oai:metadata/ddi:codeBook', namespaces)
             if ddi_root is None:
-                raise ddi.UnknownXMLRoot('{%s}codeBook' % (namespaces['ddi'],))
+                raise exceptions.UnknownXMLRoot('{%s}codeBook' % (namespaces['ddi'],))
             self._provenance_info = ProvenanceInfo(root_element, namespaces['ddi'])
             return ddi_root
 
@@ -224,7 +227,7 @@ class DDI31RecordParser(_aggregator_parser_factory(ddi.DDI31RecordParser)):
         :rtype: :obj:`DDI31RecordParser`
         """
         _expect_oai_pmh_root(root_element)
-        _ns = {'oai': 'http://www.openarchives.org/OAI/2.0/',
+        _ns = {'oai': OAI_NS['oai'],
                's': 'ddi:studyunit:3_1',
                'ddi': 'ddi:instance:3_1'}
         ddi_root = None
@@ -238,6 +241,38 @@ class DDI31RecordParser(_aggregator_parser_factory(ddi.DDI31RecordParser)):
                 './oai:GetRecord/oai:record/oai:metadata/s:StudyUnit', _ns)
             metadata_namespace = _ns['s']
         if ddi_root is None:
-            raise ddi.UnknownXMLRoot('{%s}DDIInstance or {%s}StudyUnit' % (_ns['ddi'], _ns['s']))
+            raise exceptions.UnknownXMLRoot('{%s}DDIInstance or {%s}StudyUnit' % (_ns['ddi'], _ns['s']))
+        self._provenance_info = ProvenanceInfo(root_element, metadata_namespace)
+        super().__init__(ddi_root)
+
+
+class DDI33RecordParser(_aggregator_parser_factory(ddi.DDI33RecordParser)):
+    """Parse OAI-PMH record containing DDI3.3. metadata
+    and map it to CDCAGG records."""
+
+    def __init__(self, root_element):
+        """Initiate DDI33RecordParser with XML root node.
+
+        :param root_element: XML root node.
+        :type root_element: :obj:`xml.etree.ElementTree.Element`
+        :returns: Instance of DDI33RecordParser
+        :rtype: :obj:`DDI33RecordParser`
+        """
+        _expect_oai_pmh_root(root_element)
+        _ns = {'oai': OAI_NS['oai'],
+               's': 'ddi:studyunit:3_3',
+               'ddi': 'ddi:instance:3_3'}
+        ddi_root = None
+        for xpath, metadata_namespace in (
+                ('./oai:GetRecord/oai:record/oai:metadata/ddi:DDIInstance', _ns['ddi']),
+                ('./oai:GetRecord/oai:record/oai:metadata/s:StudyUnit', _ns['s']),
+                ('./oai:GetRecord/oai:record/oai:metadata/ddi:FragmentInstance', _ns['ddi'])):
+            ddi_root = root_element.find(xpath, _ns)
+            if ddi_root is not None:
+                break
+        if ddi_root is None:
+            raise exceptions.UnknownXMLRoot(
+                '{%s}DDIInstance or {%s}StudyUnit or {%s}FragmentInstance'
+                % (_ns['ddi'], _ns['s'], _ns['ddi']))
         self._provenance_info = ProvenanceInfo(root_element, metadata_namespace)
         super().__init__(ddi_root)

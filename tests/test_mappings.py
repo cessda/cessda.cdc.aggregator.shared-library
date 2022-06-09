@@ -319,3 +319,84 @@ class TestDDI31RecordParser(_Wrapper.RecordParserTestBase):
                     '</a:Collection></a:ArchiveSpecific></a:Archive></s:StudyUnit>'
                     '</ddi:DDIInstance>')
     ParserClass = mappings.DDI31RecordParser
+
+
+class TestDDI33RecordParser(_Wrapper.RecordParserTestBase):
+
+    _mdns = 'ddi:instance:3_3'
+    _valid_md = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3_3" '
+                 'xmlns:s="ddi:studyunit:3_3" '
+                 'xmlns:pd="ddi:physicaldataproduct:3_3" '
+                 'xmlns:pi="ddi:physicalinstance:3_3" '
+                 'xmlns:c="ddi:conceptualcomponent:3_3" '
+                 'xmlns:l="ddi:logicalproduct:3_3" '
+                 'xmlns:r="ddi:reusable:3_3" '
+                 'xmlns:dc="ddi:datacollection:3_3" '
+                 'xmlns:a="ddi:archive:3_3" '
+                 'xmlns:g="ddi:group:3_3" '
+                 'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
+                 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                 'xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
+                 '3.3/XMLSchema/instance.xsd">'
+                 '<s:StudyUnit></s:StudyUnit>'
+                 '</ddi:DDIInstance>')
+    _invalid_md = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3" '
+                   'xmlns:s="ddi:studyunit:3_3" '
+                   'xmlns:pd="ddi:physicaldataproduct:3_3" '
+                   'xmlns:pi="ddi:physicalinstance:3_3" '
+                   'xmlns:c="ddi:conceptualcomponent:3_3" '
+                   'xmlns:l="ddi:logicalproduct:3_3" '
+                   'xmlns:r="ddi:reusable:3_3" '
+                   'xmlns:dc="ddi:datacollection:3_3" '
+                   'xmlns:a="ddi:archive:3_3" '
+                   'xmlns:g="ddi:group:3_3" '
+                   'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
+                   'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                   'xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
+                   '3.3/XMLSchema/instance.xsd">'
+                   '<s:StudyUnit></s:StudyUnit>'
+                   '</ddi:DDIInstance>')
+    _valid_study_idno = 'idno for ddi33'
+    _valid_study_title = 'title for ddi33'
+    _valid_study = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3_3" '
+                    'xmlns:s="ddi:studyunit:3_3" '
+                    'xmlns:pd="ddi:physicaldataproduct:3_3" '
+                    'xmlns:pi="ddi:physicalinstance:3_3" '
+                    'xmlns:c="ddi:conceptualcomponent:3_3" '
+                    'xmlns:l="ddi:logicalproduct:3_3" '
+                    'xmlns:r="ddi:reusable:3_3" '
+                    'xmlns:dc="ddi:datacollection:3_3" '
+                    'xmlns:a="ddi:archive:3_3" '
+                    'xmlns:g="ddi:group:3_3" '
+                    'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                    'xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
+                    '3.3/XMLSchema/instance.xsd">'
+                    '<s:StudyUnit><r:Citation><r:Title><r:String>'
+                    'title for ddi33'
+                    '</r:String></r:Title></r:Citation>'
+                    '<a:Archive><a:ArchiveSpecific><a:Collection>'
+                    '<a:CallNumber>idno for ddi33</a:CallNumber>'
+                    '</a:Collection></a:ArchiveSpecific></a:Archive></s:StudyUnit>'
+                    '</ddi:DDIInstance>')
+    ParserClass = mappings.DDI33RecordParser
+
+    def test_accepts_FragmentInstance(self):
+        """DDI33 can be wrapped in FragmentInstance root element."""
+        metadata = ('<FragmentInstance xmlns="ddi:instance:3_3" xmlns:r="ddi:reusable:3_3">'
+                    '<TopLevelReference><r:URN>urn:ddi:some_agency:some_id:1</r:URN>'
+                    '<r:TypeOfObject>StudyUnit</r:TypeOfObject></TopLevelReference>'
+                    '<Fragment><StudyUnit xmlns="ddi:studyunit:3_3">'
+                    '<r:Agency>some_agency</r:Agency>'
+                    '<r:ID>some_id</r:ID>'
+                    '<r:Version>1</r:Version>'
+                    '<r:Citation><r:Title><r:String>some title</r:String></r:Title></r:Citation>'
+                    '</StudyUnit></Fragment></FragmentInstance>')
+        studies = list(self.ParserClass.from_string(_valid_root(metadata=metadata,
+                                                                base_url='some.base.url',
+                                                                identifier='some/oai/id')).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies.pop()
+        self.assertEqual(study.study_number.get_value(), 'some.base.url__some2Foai2Fid')
+        self.assertEqual(study.study_titles[0].get_value(), 'some title')
+        self.assertEqual(study._provenance[0].attr_metadata_namespace.get_value(), 'ddi:instance:3_3')
