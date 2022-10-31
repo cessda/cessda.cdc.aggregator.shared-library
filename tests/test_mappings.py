@@ -137,6 +137,19 @@ class _Wrapper:
             with self.assertRaises(UnknownXMLRoot):
                 self.ParserClass.from_string(_valid_root(metadata=self._invalid_md))
 
+        def test_raises_UnknownXMLRoot_when_no_oai_metadata_element(self):
+            with self.assertRaises(UnknownXMLRoot):
+                self.ParserClass.from_string(
+                    ('<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" '
+                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                     'xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ '
+                     'http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">'
+                     '<request>some_base_url</request>'
+                     '<GetRecord><record><header>'
+                     '<identifier>identifier</identifier>'
+                     '<datestamp>datestamp</datestamp></header>'
+                     '</record></GetRecord></OAI-PMH>'))
+
         def test_returns_studies(self):
             studies = list(self.ParserClass.from_string(_valid_root(metadata=self._valid_study,
                                                                     base_url='some.base.url',

@@ -5,6 +5,22 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.0] - unreleased
+
+### Changed
+
+- Require Kuha Common >= 2.0.0 in setup.py.
+- Update dependency Kuha Common to 2.0.0 in requirements.txt.
+- Update dependency Tornado to 6.2.0 in requirements.txt.
+
+### Added
+
+- Support for Funding information. (Implements
+  [#33](https://bitbucket.org/cessda/cessda.cdc.aggregator.shared-library/issues/33))
+- Support for Related Publication identifiers. (Implements
+  [#33](https://bitbucket.org/cessda/cessda.cdc.aggregator.shared-library/issues/33))
+
+
 ## [0.4.0] - 2022-06-29
 
 ### Changed
