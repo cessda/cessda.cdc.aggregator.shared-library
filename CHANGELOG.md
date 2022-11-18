@@ -5,12 +5,12 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## [0.5.0] - unreleased
+## [0.5.0] - 2022-11-18
 
 ### Changed
 
-- Require Kuha Common >= 2.0.0 in setup.py.
-- Update dependency Kuha Common to 2.0.0 in requirements.txt.
+- Require Kuha Common >= 2.0.1 in setup.py.
+- Update dependency Kuha Common to 2.0.1 in requirements.txt.
 - Update dependency Tornado to 6.2.0 in requirements.txt.
 
 ### Added
