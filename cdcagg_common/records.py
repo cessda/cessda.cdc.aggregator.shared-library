@@ -68,6 +68,16 @@ class RecordBase(records.RecordBase):
         """
         self._aggregator_identifier.set_value(value)
 
+    def set_direct_base_url(self, value):
+        """Set direct base url
+
+        :param str value: direct base url
+        :raises: :exc:`ValueError` if direct base url is already set
+        """
+        if self._direct_base_url.get_value() is not None:
+            raise ValueError("Direct base url is already set")
+        self._direct_base_url.set_value(value)
+
     def _import_provenance(self, dct):
         if self._provenance.name in dct:
             self._provenance.import_records(dct[self._provenance.name])

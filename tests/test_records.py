@@ -30,6 +30,12 @@ class TestStudy(unittest.TestCase):
         self.assertTrue(hasattr(records.Study._direct_base_url, 'fabricate'))
         self.assertTrue(hasattr(records.Study._aggregator_identifier, 'fabricate'))
 
+    def test_set_direct_base_url_raises_ValueError_if_already_set(self):
+        s = records.Study()
+        s.set_direct_base_url('some.url')
+        with self.assertRaises(ValueError):
+            s.set_direct_base_url('another.url')
+
     def test_export_provenance_dict(self):
         s = records.Study()
         s._provenance.add_value('2000-01-01T23:00:00Z', altered=True, base_url='some_base_url',
