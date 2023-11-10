@@ -176,6 +176,7 @@ def _aggregator_parser_factory(baseclass):
             :rtype: :obj:`cdcagg_common.records.Study`
             """
             for study in super().studies:
+                study._direct_base_url.add_value(self._provenance_info.base_url)
                 study.set_aggregator_identifier(_generate_aggregator_identifier(
                     self._provenance_info.base_url, self._provenance_info.identifier))
                 _add_provenances(study, self._provenance_info.full)
