@@ -64,7 +64,7 @@ class TestStudy(unittest.TestCase):
 
     def test_export_direct_provenance_dict_exports_base_url(self):
         s = records.Study()
-        s._direct_base_url.add_value('some.base.url')
+        s.set_direct_base_url('some.base.url')
         self.assertEqual(s.export_provenance_dict()['_direct_base_url'], 'some.base.url')
 
     def test_imports_existing_record_provenances(self):
@@ -95,6 +95,6 @@ class TestStudy(unittest.TestCase):
 
     def test_imports_existing_record_direct_base_url(self):
         s = records.Study()
-        s._direct_base_url.add_value('some.url')
+        s.set_direct_base_url('some.url')
         imported = records.Study(s.export_dict(include_provenance=True, include_metadata=True, include_id=True))
         self.assertEqual(imported.export_provenance_dict()['_direct_base_url'], 'some.url')
