@@ -201,6 +201,16 @@ class _Wrapper:
                      'metadata_namespace': self._mdns,
                      'harvest_date': mock_datetime_to_datestamp.return_value}]})
 
+        def test_returned_study_countains_proper_direct_base_url(self):
+            study = list(self.ParserClass.from_string(_valid_root(
+                metadata=self._valid_study,
+                base_url='http://some.base.url',
+                identifier='someoaiidentifier',
+                datestamp='2000-01-01'
+            )).studies).pop()
+            self.assertEqual(study._direct_base_url.export_dict(),
+                             {'_direct_base_url': 'http://some.base.url'})
+
         def test_does_not_raise_for_valid_root_element(self):
             self.ParserClass.from_string(_valid_root(metadata=self._valid_md))
 

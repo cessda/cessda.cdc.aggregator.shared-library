@@ -5,6 +5,16 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.6.0] - 2023-11-24
+
+### Changed
+
+- Alter RecordBase schema: add `_direct_base_url` attribute. (Implements
+  [#39](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/39))
+- Map source records direct base url to `study._direct_base_url`. (Implements
+  [#39](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/39))
+
+
 ## [0.5.0] - 2022-11-18
 
 ### Changed

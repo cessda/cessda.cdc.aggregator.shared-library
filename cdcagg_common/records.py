@@ -25,8 +25,8 @@ class RecordBase(records.RecordBase):
     """Base class for all CDC Aggregator records.
 
     Subclass of :class:`kuha_common.document_store.records`, which
-    defines additional :attr:`_provenance` and :attr:`_aggregator_identifier`
-    attributes.
+    defines additional :attr:`_provenance`, :attr:`_direct_base_url`
+    and :attr:`_aggregator_identifier` attributes.
     """
 
     _provenance = FieldTypeFactory('_provenance', 'harvest_date',
@@ -35,6 +35,8 @@ class RecordBase(records.RecordBase):
                                           'direct',
                                           'metadata_namespace'],
                                    localizable=False)
+    _direct_base_url = FieldTypeFactory('_direct_base_url',
+                                        localizable=False, single_value=True)
     _aggregator_identifier = FieldTypeFactory('_aggregator_identifier',
                                               localizable=False, single_value=True)
 
@@ -51,6 +53,7 @@ class RecordBase(records.RecordBase):
         :returns: Instance of a record subclass.
         """
         self._provenance = self._provenance.fabricate()
+        self._direct_base_url = self._direct_base_url.fabricate()
         self._aggregator_identifier = self._aggregator_identifier.fabricate()
         if document_store_dictionary is not None:
             self._import_provenance(document_store_dictionary)
@@ -65,11 +68,23 @@ class RecordBase(records.RecordBase):
         """
         self._aggregator_identifier.set_value(value)
 
+    def set_direct_base_url(self, value):
+        """Set direct base url
+
+        :param str value: direct base url
+        :raises: :exc:`ValueError` if direct base url is already set
+        """
+        if self._direct_base_url.get_value() is not None:
+            raise ValueError("Direct base url is already set")
+        self._direct_base_url.set_value(value)
+
     def _import_provenance(self, dct):
         if self._provenance.name in dct:
             self._provenance.import_records(dct[self._provenance.name])
         if self._aggregator_identifier.name in dct:
             self._aggregator_identifier.import_records(dct[self._aggregator_identifier.name])
+        if self._direct_base_url.name in dct:
+            self._direct_base_url.import_records(dct[self._direct_base_url.name])
 
     def export_provenance_dict(self):
         """Export provenance info as a dictionary.
@@ -79,6 +94,7 @@ class RecordBase(records.RecordBase):
         """
         dct = self._provenance.export_dict()
         dct.update(self._aggregator_identifier.export_dict())
+        dct.update(self._direct_base_url.export_dict())
         return dct
 
     def export_dict(self, include_provenance=True, **kwargs):
