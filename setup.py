@@ -22,13 +22,13 @@ with open('VERSION', 'r') as file_obj:
 
 
 requires = [
-    'kuha_common>=2.0.1'
+    'kuha_common>=2.4.0'
 ]
 
 
 setup(name='cdcagg_common',
       version=version,
-      url='https://bitbucket.org/cessda/cessda.cdc.aggregator.shared-library',
+      url='https://github.com/cessda/cessda.cdc.aggregator.shared-library',
       description='',
       license='EUPL v1.2',
       author='Toni Sissala',
