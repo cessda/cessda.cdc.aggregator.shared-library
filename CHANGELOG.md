@@ -5,6 +5,22 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.0] - 2024-04-30
+
+### Added
+
+- Add `external_link`, `external_link_role`, `external_link_uri` and
+  `external_link_title` attributes to `Study.principal_investigators`.
+- Map DDI-C `/codeBook/stdyDscr/citation/rspStmt/AuthEnty/ExtLink`
+  values and attributes to `Study.principal_investigators`.
+
+### Changed
+
+- Require Kuha Common 2.4.0 in requirements.txt and setup.py.
+- Change Kuha Common source url in requirements.txt (Implements
+  [#41](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/41))
+
+
 ## [0.6.0] - 2023-11-24
 
 ### Changed

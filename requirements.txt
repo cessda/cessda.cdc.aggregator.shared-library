@@ -5,4 +5,4 @@ tornado==6.2.0
 
 # Direct
 # Kuha Common
-git+https://bitbucket.org/tietoarkisto/kuha_common@2.0.1#egg=kuha_common
+git+https://gitlab.tuni.fi/fsd/kuha_common@2.4.0#egg=kuha_common
