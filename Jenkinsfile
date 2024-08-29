@@ -170,11 +170,65 @@ node(node_name) {
             }
         }
     }
+    tasks_4['Run Tests py311'] = {
+        docker.image('python:3.11').inside('-u root') {
+            stage('Prepare Tox Venv') {
+                if (!fileExists(toxEnvName)) {
+                    echo 'Build Python Virtualenv for testing...'
+                    sh """
+                    python -m venv ${toxEnvName}
+                    . ./${toxEnvName}/bin/activate
+                    pip install --upgrade pip
+                    pip install tox
+                    """
+                }
+            }
+            stage('Run Tests') {
+                sh """
+                . ./${toxEnvName}/bin/activate
+                tox -e py311
+                """
+            }
+            stage('Clean up tox-env') {
+                if (fileExists(toxEnvName)) {
+                    sh "rm -r ${toxEnvName}"
+                }
+            }
+        }
+    }
+    tasks_5['Run Tests py312'] = {
+        docker.image('python:3.12').inside('-u root') {
+            stage('Prepare Tox Venv') {
+                if (!fileExists(toxEnvName)) {
+                    echo 'Build Python Virtualenv for testing...'
+                    sh """
+                    python -m venv ${toxEnvName}
+                    . ./${toxEnvName}/bin/activate
+                    pip install --upgrade pip
+                    pip install tox
+                    """
+                }
+            }
+            stage('Run Tests') {
+                sh """
+                . ./${toxEnvName}/bin/activate
+                tox -e py312
+                """
+            }
+            stage('Clean up tox-env') {
+                if (fileExists(toxEnvName)) {
+                    sh "rm -r ${toxEnvName}"
+                }
+            }
+        }
+    }
     try {
         // run parallel tasks
         parallel tasks_1
         parallel tasks_2
         parallel tasks_3
+        parallel tasks_4
+        parallel tasks_5
     } catch (err) {
         currentBuild.result = 'FAILURE'
         sendmail('FAILURE')
