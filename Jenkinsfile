@@ -39,7 +39,7 @@ node(node_name) {
 
     myworkspace = "${WORKSPACE}"
     echo "My workspace is ${myworkspace}"
-    // deleteDir()
+    deleteDir()
 
     // Get recipient from revision author
     checkout scm
