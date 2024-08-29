@@ -39,7 +39,7 @@ node(node_name) {
 
     myworkspace = "${WORKSPACE}"
     echo "My workspace is ${myworkspace}"
-    deleteDir()
+    // deleteDir()
 
     // Get recipient from revision author
     checkout scm
@@ -214,7 +214,7 @@ node(node_name) {
             stage('Run Tests') {
                 sh """
                 . ./${toxEnvName}/bin/activate
-                tox -e py312
+                tox -e warnings-as-errors
                 """
             }
             stage('Clean up tox-env') {
