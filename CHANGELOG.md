@@ -5,6 +5,24 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.0] - 2024-08-29
+
+### Added
+
+- Support Python 3.11 & 3.12.
+
+### Changed
+
+- Require Kuha Common 2.5.0 in requirements.txt.
+- Require Py12fLogging 0.7.0 in requirements.txt.
+- Require Tornado 6.4.1 in requirements.txt.
+- Require ConfigArgParse 1.7 in requirements.txt.
+
+### Removed
+
+- Support for Python 3.6 & 3.7.
+
+
 ## [0.7.0] - 2024-04-30
 
 ### Added
