@@ -34,6 +34,8 @@ node(node_name) {
     def tasks_1 = [:]
     def tasks_2 = [:]
     def tasks_3 = [:]
+    def tasks_4 = [:]
+    def tasks_5 = [:]
 
     myworkspace = "${WORKSPACE}"
     echo "My workspace is ${myworkspace}"
