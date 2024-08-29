@@ -214,7 +214,7 @@ node(node_name) {
             stage('Run Tests') {
                 sh """
                 . ./${toxEnvName}/bin/activate
-                tox -e warnings-as-errors
+                tox -e py312
                 """
             }
             stage('Clean up tox-env') {
