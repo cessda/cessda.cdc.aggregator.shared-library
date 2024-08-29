@@ -38,7 +38,7 @@ def _indirect_provenances_from_oaixml(origdesc_el):
                     'datestamp': ''.join(origdesc_el.find('./oai_p:datestamp', OAI_NS).itertext()),
                     'metadata_namespace': ''.join(origdesc_el.find('./oai_p:metadataNamespace', OAI_NS).itertext())}]
     nested_origdesc_el = origdesc_el.find('./oai_p:originDescription', OAI_NS)
-    if nested_origdesc_el:
+    if nested_origdesc_el is not None:
         provenances.extend(_indirect_provenances_from_oaixml(nested_origdesc_el))
     return provenances
 
@@ -101,7 +101,7 @@ class ProvenanceInfo:
         """
         provenances = [self._direct_provenance]
         prov_el = self._root_element.find('./oai:GetRecord/oai:record/oai:about/oai_p:provenance', OAI_NS)
-        if prov_el:
+        if prov_el is not None:
             provenances.extend(_indirect_provenances_from_oaixml(prov_el.find('./oai_p:originDescription', OAI_NS)))
         return provenances
 
@@ -156,7 +156,7 @@ def _aggregator_parser_factory(baseclass):
             ddi_root = root_element.find('./oai:GetRecord/oai:record/oai:metadata/ddi:codeBook', namespaces)
             if ddi_root is None:
                 md_el = root_element.find('./oai:GetRecord/oai:record/oai:metadata', namespaces)
-                raise exceptions.UnknownXMLRoot(md_el[0].tag if md_el and len(md_el) != 0 else None,
+                raise exceptions.UnknownXMLRoot(md_el[0].tag if md_el is not None and len(md_el) != 0 else None,
                                                 f"{ {namespaces['ddi']} }codeBook")
             self._provenance_info = ProvenanceInfo(root_element, namespaces['ddi'])
             return ddi_root
@@ -245,7 +245,7 @@ class DDI31RecordParser(_aggregator_parser_factory(ddi.DDI31RecordParser)):
             metadata_namespace = _ns['s']
         if ddi_root is None:
             md_el = root_element.find('./oai:GetRecord/oai:record/oai:metadata', _ns)
-            raise exceptions.UnknownXMLRoot(md_el[0].tag if md_el and len(md_el) != 0 else None,
+            raise exceptions.UnknownXMLRoot(md_el[0].tag if md_el is not None and len(md_el) != 0 else None,
                                             f"{ {_ns['ddi']} }DDIInstance",
                                             f"{ {_ns['s']} }StudyUnit")
         self._provenance_info = ProvenanceInfo(root_element, metadata_namespace)
@@ -279,7 +279,7 @@ class DDI33RecordParser(_aggregator_parser_factory(ddi.DDI33RecordParser)):
         if ddi_root is None:
             md_el = root_element.find('./oai:GetRecord/oai:record/oai:metadata', _ns)
             raise exceptions.UnknownXMLRoot(
-                md_el[0].tag if md_el and len(md_el) != 0 else None,
+                md_el[0].tag if md_el is not None and len(md_el) != 0 else None,
                 f"{ {_ns['ddi']} }DDIInstance",
                 f"{ {_ns['s']} }StudyUnit",
                 f"{ {_ns['ddi']} }FragmentInstance")
