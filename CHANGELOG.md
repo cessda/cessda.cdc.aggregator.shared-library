@@ -5,6 +5,33 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.9.0] - 2024-12-19
+
+### Added
+
+- Support more DDI-C elements. (Implements
+  [#48](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/48))
+  - Add `Study.distribution_dates` with `description` attribute.
+  - Add `Study.research_instruments` with `system_name`, `uri` and
+    `description` attributes.
+  - Add `element_version` attribute to `Study.data_access_descriptions`.
+  - Add `description` attribute to `Study.collection_periods`.
+  - Map DDI-C `/codeBook/stdyDscr/citation/distStmt/distDate` to
+    `Study.distribution_dates`.
+  - Map DDI-C `/codeBook/stdyDscr/method/dataColl/resInstru` to
+    `Study.research_instruments`.
+  - Map DDI-C
+    `/codeBook/stdyDscr/dataAccs/useStmt/conditions/@elementVersion`
+    to `Study.data_access_descriptions.attr_element_version`.
+  - Map DDI-C `/codeBook/stdyDscr/stdyInfo/sumDscr/collDate` CDATA to
+    `Study.collection_periods.attr_description`.
+
+### Changed
+
+- Require Kuha Common 2.6.0 in requirements.txt.
+- Require Tornado 6.4.2 in requirements.txt
+
+
 ## [0.8.1] - 2024-08-29
 
 ### Added

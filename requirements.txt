@@ -1,8 +1,8 @@
 # Indirect
 py12flogging==0.7.0
 ConfigArgParse==1.7
-tornado==6.4.1
+tornado==6.4.2
 
 # Direct
 # Kuha Common
-git+https://gitlab.tuni.fi/fsd/kuha_common@2.5.0#egg=kuha_common
+git+https://gitlab.tuni.fi/fsd/kuha_common@2.6.0#egg=kuha_common
