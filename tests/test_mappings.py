@@ -422,7 +422,6 @@ class TestDDI32RecordParser(_Wrapper.RecordParserTestBase):
         self.assertEqual(study._provenance[0].attr_metadata_namespace.get_value(), 'ddi:instance:3_2')
 
 
-
 class TestDDI33RecordParser(_Wrapper.RecordParserTestBase):
 
     _mdns = 'ddi:instance:3_3'
