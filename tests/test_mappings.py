@@ -344,6 +344,64 @@ class TestDDI31RecordParser(_Wrapper.RecordParserTestBase):
     ParserClass = mappings.DDI31RecordParser
 
 
+class TestDDI32RecordParser(_Wrapper.RecordParserTestBase):
+    _mdns = 'ddi:instance:3_2'
+    _valid_md = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3_2" '
+                 'xmlns:s="ddi:studyunit:3_2" '
+                 'xmlns:pd="ddi:physicaldataproduct:3_2" '
+                 'xmlns:pi="ddi:physicalinstance:3_2" '
+                 'xmlns:c="ddi:conceptualcomponent:3_2" '
+                 'xmlns:l="ddi:logicalproduct:3_2" '
+                 'xmlns:r="ddi:reusable:3_2" '
+                 'xmlns:dc="ddi:datacollection:3_2" '
+                 'xmlns:a="ddi:archive:3_2" '
+                 'xmlns:g="ddi:group:3_2" '
+                 'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
+                 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                 'xsi:schemaLocation="ddi:instance:3_2 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
+                 '3.2/XMLSchema/instance.xsd">'
+                 '<s:StudyUnit></s:StudyUnit>'
+                 '</ddi:DDIInstance>')
+    _invalid_md = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3" '
+                   'xmlns:s="ddi:studyunit:3_2" '
+                   'xmlns:pd="ddi:physicaldataproduct:3_2" '
+                   'xmlns:pi="ddi:physicalinstance:3_2" '
+                   'xmlns:c="ddi:conceptualcomponent:3_2" '
+                   'xmlns:l="ddi:logicalproduct:3_2" '
+                   'xmlns:r="ddi:reusable:3_2" '
+                   'xmlns:dc="ddi:datacollection:3_2" '
+                   'xmlns:a="ddi:archive:3_2" '
+                   'xmlns:g="ddi:group:3_2" '
+                   'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
+                   'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                   'xsi:schemaLocation="ddi:instance:3_2 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
+                   '3.2/XMLSchema/instance.xsd">'
+                   '<s:StudyUnit></s:StudyUnit>'
+                   '</ddi:DDIInstance>')
+    _valid_study = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3_2" '
+                    'xmlns:s="ddi:studyunit:3_2" '
+                    'xmlns:pd="ddi:physicaldataproduct:3_2" '
+                    'xmlns:pi="ddi:physicalinstance:3_2" '
+                    'xmlns:c="ddi:conceptualcomponent:3_2" '
+                    'xmlns:l="ddi:logicalproduct:3_2" '
+                    'xmlns:r="ddi:reusable:3_2" '
+                    'xmlns:dc="ddi:datacollection:3_2" '
+                    'xmlns:a="ddi:archive:3_2" '
+                    'xmlns:g="ddi:group:3_2" '
+                    'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                    'xsi:schemaLocation="ddi:instance:3_2 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
+                    '3.2/XMLSchema/instance.xsd">'
+                    "<s:StudyUnit><r:UserID typeOfUserID='StudyNumber'>id for ddi32</r:UserID>"
+                    '<r:Citation><r:Title><r:String>'
+                    'title for ddi32'
+                    '</r:String></r:Title></r:Citation></s:StudyUnit>'
+                    '</ddi:DDIInstance>')
+    _valid_study_title = 'title for ddi32'
+    _valid_study_idno = 'id for ddi32'
+    ParserClass = mappings.DDI32RecordParser
+
+
 class TestDDI33RecordParser(_Wrapper.RecordParserTestBase):
 
     _mdns = 'ddi:instance:3_3'

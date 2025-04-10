@@ -5,6 +5,18 @@ All notable changes to the CDC Aggregator Shared Library will be documented in t
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.10.0] - unreleased
+
+### Added
+
+- Support reading DDI 3.2 from OAI-PMH metadata. (Implements
+  [#50](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/50))
+
+### Changed
+
+- Require Kuha Common 2.7.0 in requirements.txt and setup.py.
+
+
 ## [0.9.0] - 2024-12-19
 
 ### Added
