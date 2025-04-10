@@ -401,6 +401,27 @@ class TestDDI32RecordParser(_Wrapper.RecordParserTestBase):
     _valid_study_idno = 'id for ddi32'
     ParserClass = mappings.DDI32RecordParser
 
+    def test_accepts_FragmentInstance(self):
+        """DDI32 can be wrapped in FragmentInstance"""
+        metadata = ('<FragmentInstance xmlns="ddi:instance:3_2" xmlns:r="ddi:reusable:3_2">'
+                    '<TopLevelReference><r:URN>urn:ddi:some_agency:some_id:1</r:URN>'
+                    '<r:TypeOfObject>StudyUnit</r:TypeOfObject></TopLevelReference>'
+                    '<Fragment><StudyUnit xmlns="ddi:studyunit:3_2">'
+                    '<r:Agency>some_agency</r:Agency>'
+                    '<r:ID>some_id</r:ID>'
+                    '<r:Version>1</r:Version>'
+                    '<r:Citation><r:Title><r:String>some title</r:String></r:Title></r:Citation>'
+                    '</StudyUnit></Fragment></FragmentInstance>')
+        studies = list(self.ParserClass.from_string(_valid_root(metadata=metadata,
+                                                                base_url='some.base.url',
+                                                                identifier='some/oai/id')).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies.pop()
+        self.assertEqual(study.study_number.get_value(), 'some.base.url__some2Foai2Fid')
+        self.assertEqual(study.study_titles[0].get_value(), 'some title')
+        self.assertEqual(study._provenance[0].attr_metadata_namespace.get_value(), 'ddi:instance:3_2')
+
+
 
 class TestDDI33RecordParser(_Wrapper.RecordParserTestBase):
 
