@@ -425,20 +425,22 @@ class TestDDI32RecordParser(_Wrapper.RecordParserTestBase):
 class TestDDI33RecordParser(_Wrapper.RecordParserTestBase):
 
     _mdns = 'ddi:instance:3_3'
-    _valid_md = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3_3" '
-                 'xmlns:s="ddi:studyunit:3_3" '
-                 'xmlns:pd="ddi:physicaldataproduct:3_3" '
-                 'xmlns:pi="ddi:physicalinstance:3_3" '
-                 'xmlns:c="ddi:conceptualcomponent:3_3" '
-                 'xmlns:l="ddi:logicalproduct:3_3" '
-                 'xmlns:r="ddi:reusable:3_3" '
-                 'xmlns:dc="ddi:datacollection:3_3" '
-                 'xmlns:a="ddi:archive:3_3" '
-                 'xmlns:g="ddi:group:3_3" '
-                 'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
-                 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
-                 'xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
-                 '3.3/XMLSchema/instance.xsd">'
+    _ddi_instance_root = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3_3" '
+                          'xmlns:s="ddi:studyunit:3_3" '
+                          'xmlns:pd="ddi:physicaldataproduct:3_3" '
+                          'xmlns:pi="ddi:physicalinstance:3_3" '
+                          'xmlns:c="ddi:conceptualcomponent:3_3" '
+                          'xmlns:l="ddi:logicalproduct:3_3" '
+                          'xmlns:r="ddi:reusable:3_3" '
+                          'xmlns:dc="ddi:datacollection:3_3" '
+                          'xmlns:a="ddi:archive:3_3" '
+                          'xmlns:g="ddi:group:3_3" '
+                          'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
+                          'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                          'xsi:schemaLocation="ddi:instance:3_1 '
+                          'http://www.ddialliance.org/Specification/DDI-Lifecycle/'
+                          '3.3/XMLSchema/instance.xsd">')
+    _valid_md = (_ddi_instance_root +
                  '<s:StudyUnit></s:StudyUnit>'
                  '</ddi:DDIInstance>')
     _invalid_md = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3" '
@@ -459,20 +461,7 @@ class TestDDI33RecordParser(_Wrapper.RecordParserTestBase):
                    '</ddi:DDIInstance>')
     _valid_study_idno = 'idno for ddi33'
     _valid_study_title = 'title for ddi33'
-    _valid_study = ('<ddi:DDIInstance xmlns:ddi="ddi:instance:3_3" '
-                    'xmlns:s="ddi:studyunit:3_3" '
-                    'xmlns:pd="ddi:physicaldataproduct:3_3" '
-                    'xmlns:pi="ddi:physicalinstance:3_3" '
-                    'xmlns:c="ddi:conceptualcomponent:3_3" '
-                    'xmlns:l="ddi:logicalproduct:3_3" '
-                    'xmlns:r="ddi:reusable:3_3" '
-                    'xmlns:dc="ddi:datacollection:3_3" '
-                    'xmlns:a="ddi:archive:3_3" '
-                    'xmlns:g="ddi:group:3_3" '
-                    'xmlns:xhtml="http://www.w3.org/1999/xhtml" '
-                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
-                    'xsi:schemaLocation="ddi:instance:3_1 http://www.ddialliance.org/Specification/DDI-Lifecycle/'
-                    '3.3/XMLSchema/instance.xsd">'
+    _valid_study = (_ddi_instance_root +
                     '<s:StudyUnit><r:Citation><r:Title><r:String>'
                     'title for ddi33'
                     '</r:String></r:Title></r:Citation>'
@@ -501,3 +490,132 @@ class TestDDI33RecordParser(_Wrapper.RecordParserTestBase):
         self.assertEqual(study.study_number.get_value(), 'some.base.url__some2Foai2Fid')
         self.assertEqual(study.study_titles[0].get_value(), 'some title')
         self.assertEqual(study._provenance[0].attr_metadata_namespace.get_value(), 'ddi:instance:3_3')
+
+    def test_primary_identifier_from_UserID(self):
+        """Make sure UserID is now the primary source for Study.identifiers
+
+        Issue at github:
+        https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/52"""
+        studies = list(self.ParserClass.from_string(_valid_root(
+            metadata=self._ddi_instance_root +
+            '<s:StudyUnit><r:UserID typeOfUserID="StudyNumber">identifier</r:UserID>'
+            '<a:Archive><a:ArchiveSpecific><a:Collection>'
+            '<a:CallNumber>idno for ddi33</a:CallNumber>'
+            '</a:Collection></a:ArchiveSpecific></a:Archive>'
+            '</s:StudyUnit></ddi:DDIInstance>',
+            base_url='some.base',
+            identifier='oai_rec_1'
+        )).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies[0]
+        self.assertEqual(len(study.identifiers), 1)
+        self.assertEqual(study.identifiers[0].get_value(), 'identifier')
+
+    def test_primary_identifier_not_from_UserID(self):
+        """Make sure UserID is not read into identifiers if @typeOfUserID is incorrect
+
+        Issue at github:
+        https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/52"""
+        studies = list(self.ParserClass.from_string(_valid_root(
+            metadata=self._ddi_instance_root +
+            '<s:StudyUnit><r:UserID typeOfUserID="incorrect">identifier</r:UserID></s:StudyUnit>'
+            '</ddi:DDIInstance>',
+            base_url='some.base',
+            identifier='oai_rec_1'
+        )).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies[0]
+        self.assertEqual(len(study.identifiers), 0)
+
+    def test_primary_data_access(self):
+        """Make sure
+        ddi:DDIInstance/s:StudyUnit/a:Archive/a:ArchiveSpecific/a:Item/a:Access/r:Description/r:Content
+        is read into data_access and all other lookups are skipped.
+        Issue at github:
+        https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/53
+        """
+        studies = list(self.ParserClass.from_string(_valid_root(
+            metadata=self._ddi_instance_root +
+            '<s:StudyUnit><a:Archive><a:ArchiveSpecific>'
+            '<a:Item><a:Access><r:Description>'
+            '<r:Content>Primary</r:Content>'
+            '</r:Description></a:Access></a:Item>'
+            '<a:DefaultAccess><a:Restrictions>'
+            '<r:Content>Secondary</r:Content>'
+            '</a:Restrictions></a:DefaultAccess>'
+            '</a:ArchiveSpecific></a:Archive></s:StudyUnit>'
+            '</ddi:DDIInstance>',
+            base_url='some.base',
+            identifier='some_id')).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies[0]
+        self.assertEqual(len(study.data_access), 1)
+        self.assertEqual(study.data_access[0].get_value(), 'Primary')
+
+    def test_data_access_fallback(self):
+        """Make sure if
+        ddi:DDIInstance/s:StudyUnit/a:Archive/a:ArchiveSpecific/a:Item/a:Access/r:Description/r:Content
+        is not found, we fallback to old source XPATHs
+        """
+        studies = list(self.ParserClass.from_string(_valid_root(
+            metadata=self._ddi_instance_root +
+            '<s:StudyUnit><a:Archive><a:ArchiveSpecific>'
+            '<a:Item><a:Access><r:Description>'
+            '</r:Description></a:Access></a:Item>'
+            '<a:DefaultAccess><a:Restrictions>'
+            '<r:Content>Secondary</r:Content>'
+            '</a:Restrictions></a:DefaultAccess>'
+            '</a:ArchiveSpecific></a:Archive></s:StudyUnit>'
+            '</ddi:DDIInstance>',
+            base_url='some.base',
+            identifier='some_id')).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies[0]
+        self.assertEqual(len(study.data_access), 1)
+        self.assertEqual(study.data_access[0].get_value(), 'Secondary')
+
+    def test_data_access_descriptions_primary(self):
+        """Make sure
+        ddi:DDIInstance/s:StudyUnit/a:Archive/a:ArchiveSpecific/a:Item/a:Access/a:TypeOfAccess
+        is read into data_access_descriptions and all other source
+        xpaths are skipped.
+
+        Issue at github: https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/54
+        """
+        studies = list(self.ParserClass.from_string(_valid_root(
+            metadata=self._ddi_instance_root +
+            '<s:StudyUnit><a:Archive><a:ArchiveSpecific><a:Item><a:Access>'
+            '<a:TypeOfAccess controlledVocabularyName="elem_vers">primary</a:TypeOfAccess>'
+            '</a:Access></a:Item><a:DefaultAccess><a:AccessConditions>'
+            '<r:Content>secondary</r:Content>'
+            '</a:AccessConditions></a:DefaultAccess></a:ArchiveSpecific></a:Archive>'
+            '</s:StudyUnit></ddi:DDIInstance>',
+            base_url='some.base',
+            identifier='someid')).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies[0]
+        self.assertEqual(len(study.data_access_descriptions), 1)
+        self.assertEqual(study.data_access_descriptions[0].get_value(), 'primary')
+        self.assertEqual(study.data_access_descriptions[0].attr_element_version.get_value(), 'elem_vers')
+
+    def test_data_access_descriptions_fallback(self):
+        """If
+        ddi:DDIInstance/s:StudyUnit/a:Archive/a:ArchiveSpecific/a:Item/a:Access/a:TypeOfAccess
+        is not found we fallback to old source.
+
+        Issue at github: https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/54
+        """
+        studies = list(self.ParserClass.from_string(_valid_root(
+            metadata=self._ddi_instance_root +
+            '<s:StudyUnit><a:Archive><a:ArchiveSpecific><a:Item><a:Access>'
+            '</a:Access></a:Item><a:DefaultAccess><a:AccessConditions>'
+            '<r:Content>secondary</r:Content>'
+            '</a:AccessConditions></a:DefaultAccess></a:ArchiveSpecific></a:Archive>'
+            '</s:StudyUnit></ddi:DDIInstance>',
+            base_url='some.base',
+            identifier='someid')).studies)
+        self.assertEqual(len(studies), 1)
+        study = studies[0]
+        self.assertEqual(len(study.data_access_descriptions), 1)
+        self.assertEqual(study.data_access_descriptions[0].get_value(), 'secondary')
+        self.assertEqual(study.data_access_descriptions[0].attr_element_version.get_value(), None)
