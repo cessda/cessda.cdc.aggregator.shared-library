@@ -15,6 +15,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 
 - Require Kuha Common 2.7.0 in requirements.txt and setup.py.
+- DDI 3.3 mapping: add primary lookup XPATH
+  `/ddi:DDIInstance/s:StudyUnit/r:UserID` for `Study.identifiers` when
+  `@typeOfUserID` attribute is "StudyNumber". If this is found, all
+  other lookup locations are skipped. If this is not found or
+  `@typeOfUserID` is not "StudyNumber", then the old behaviour
+  applies. (Implements
+  [#52](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/52))
+- DDI 3.3 mapping: add primary lookup XPATH
+  `/ddi:DDIInstance/s:StudyUnit/a:Archive/a:ArchiveSpecific/a:Item/a:Access/r:Description/r:Content`
+  for `Study.data_access`. If this is found, all other lookup
+  locations are skipped. If this is not found, then the old behaviour
+  applies. (Implements
+  [#53](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/53))
+- DDI 3.3 mapping: add primary lookup XPATH
+  `/ddi:DDIInstance/s:StudyUnit/a:Archive/a:ArchiveSpecific/a:Item/a:Access/a:TypeOfAccess`
+  for `Study.data_access_descriptions`, and use its
+  `@controlledVocabularyName` attributes value for
+  `Study.data_access_descriptions.attr_element_version`. If this is
+  found, all other lookup locations are skipped. If this is not found,
+  the old behaviour applies. (Implements
+  [#54](https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/54))
 
 
 ## [0.9.0] - 2024-12-19
