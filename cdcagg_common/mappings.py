@@ -252,6 +252,43 @@ class DDI31RecordParser(_aggregator_parser_factory(ddi.DDI31RecordParser)):
         super().__init__(ddi_root)
 
 
+def _ddi32_get_ddi_root_and_namespace_or_raise(root_element, namespaces):
+    for xpath, metadata_namespace in (
+            ('./oai:GetRecord/oai:record/oai:metadata/ddi:DDIInstance', namespaces['ddi']),
+            ('./oai:GetRecord/oai:record/oai:metadata/s:StudyUnit', namespaces['s']),
+            ('./oai:GetRecord/oai:record/oai:metadata/ddi:FragmentInstance', namespaces['ddi'])):
+        ddi_root = root_element.find(xpath, namespaces)
+        if ddi_root is not None:
+            return ddi_root, metadata_namespace
+    md_el = root_element.find('./oai:GetRecord/oai:record/oai:metadata', namespaces)
+    raise exceptions.UnknownXMLRoot(
+        md_el[0].tag if md_el is not None and len(md_el) != 0 else None,
+        f"{ {namespaces['ddi']} }DDIInstance",
+        f"{ {namespaces['s']} }StudyUnit",
+        f"{ {namespaces['ddi']} }FragmentInstance")
+
+
+class DDI32RecordParser(_aggregator_parser_factory(ddi.DDI32RecordParser)):
+    """Parse OAI-PMH record containing DDI3.2. metadata
+    and map it to CDCAGG records."""
+
+    def __init__(self, root_element):
+        """Initiate DDI32RecordParser with XML root node.
+
+        :param root_element: XML root node.
+        :type root_element: :obj:`xml.etree.ElementTree.Element`
+        :returns: Instance of DDI32RecordParser
+        :rtype: :obj:`DDI32RecordParser`
+        """
+        _expect_oai_pmh_root(root_element)
+        _ns = {'oai': OAI_NS['oai'],
+               's': 'ddi:studyunit:3_2',
+               'ddi': 'ddi:instance:3_2'}
+        ddi_root, metadata_namespace = _ddi32_get_ddi_root_and_namespace_or_raise(root_element, _ns)
+        self._provenance_info = ProvenanceInfo(root_element, metadata_namespace)
+        super().__init__(ddi_root)
+
+
 class DDI33RecordParser(_aggregator_parser_factory(ddi.DDI33RecordParser)):
     """Parse OAI-PMH record containing DDI3.3. metadata
     and map it to CDCAGG records."""
@@ -268,20 +305,6 @@ class DDI33RecordParser(_aggregator_parser_factory(ddi.DDI33RecordParser)):
         _ns = {'oai': OAI_NS['oai'],
                's': 'ddi:studyunit:3_3',
                'ddi': 'ddi:instance:3_3'}
-        ddi_root = None
-        for xpath, metadata_namespace in (
-                ('./oai:GetRecord/oai:record/oai:metadata/ddi:DDIInstance', _ns['ddi']),
-                ('./oai:GetRecord/oai:record/oai:metadata/s:StudyUnit', _ns['s']),
-                ('./oai:GetRecord/oai:record/oai:metadata/ddi:FragmentInstance', _ns['ddi'])):
-            ddi_root = root_element.find(xpath, _ns)
-            if ddi_root is not None:
-                break
-        if ddi_root is None:
-            md_el = root_element.find('./oai:GetRecord/oai:record/oai:metadata', _ns)
-            raise exceptions.UnknownXMLRoot(
-                md_el[0].tag if md_el is not None and len(md_el) != 0 else None,
-                f"{ {_ns['ddi']} }DDIInstance",
-                f"{ {_ns['s']} }StudyUnit",
-                f"{ {_ns['ddi']} }FragmentInstance")
+        ddi_root, metadata_namespace = _ddi32_get_ddi_root_and_namespace_or_raise(root_element, _ns)
         self._provenance_info = ProvenanceInfo(root_element, metadata_namespace)
         super().__init__(ddi_root)
