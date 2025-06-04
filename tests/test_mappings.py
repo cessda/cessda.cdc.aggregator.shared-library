@@ -167,7 +167,7 @@ class _Wrapper:
             hash.
 
             Tests implementation of
-            https://bitbucket.org/cessda/cessda.cdc.aggregator.shared-library/issues/27
+            https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/27
             """
             studies = list(self.ParserClass.from_string(
                 _valid_root(metadata=self._valid_md,
