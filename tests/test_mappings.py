@@ -1,4 +1,4 @@
-# Copyright CESSDA ERIC 2021
+# Copyright CESSDA ERIC 2021-2025
 #
 # Licensed under the EUPL, Version 1.2 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -167,7 +167,7 @@ class _Wrapper:
             hash.
 
             Tests implementation of
-            https://bitbucket.org/cessda/cessda.cdc.aggregator.shared-library/issues/27
+            https://github.com/cessda/cessda.cdc.aggregator.shared-library/issues/27
             """
             studies = list(self.ParserClass.from_string(
                 _valid_root(metadata=self._valid_md,

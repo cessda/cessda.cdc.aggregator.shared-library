@@ -1,6 +1,6 @@
 # CESSDA CDC Aggregator - Shared library #
 
-[![Build Status](https://jenkins.cessda.eu/buildStatus/icon?job=cessda.cdc.aggregator.shared-library%2Fmaster)](https://jenkins.cessda.eu/job/cessda.cdc.aggregator.shared-library/job/master/)
+[![Build Status](https://jenkins.cessda.eu/buildStatus/icon?job=cessda.cdc.aggregator.shared-library%2Fmain)](https://jenkins.cessda.eu/job/cessda.cdc.aggregator.shared-library/job/main/)
 [![Bugs](https://sonarqube.cessda.eu/api/project_badges/measure?project=cessda.cdc.aggregator.shared-library&metric=bugs)](https://sonarqube.cessda.eu/dashboard?id=cessda.cdc.aggregator.shared-library)
 [![Code Smells](https://sonarqube.cessda.eu/api/project_badges/measure?project=cessda.cdc.aggregator.shared-library&metric=code_smells)](https://sonarqube.cessda.eu/dashboard?id=cessda.cdc.aggregator.shared-library)
 [![Coverage](https://sonarqube.cessda.eu/api/project_badges/measure?project=cessda.cdc.aggregator.shared-library&metric=coverage)](https://sonarqube.cessda.eu/dashboard?id=cessda.cdc.aggregator.shared-library)
