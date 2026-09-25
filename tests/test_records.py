@@ -98,3 +98,11 @@ class TestStudy(unittest.TestCase):
         s.set_direct_base_url('some.url')
         imported = records.Study(s.export_dict(include_provenance=True, include_metadata=True, include_id=True))
         self.assertEqual(imported.export_provenance_dict()['_direct_base_url'], 'some.url')
+
+    def test_imports_a_record_with_different_schema_version(self):
+        s = records.Study()
+        new_schema_version = float(s.get_schema_version()) + 0.1
+        s.set_schema_version(new_schema_version)
+        imported = records.Study(s.export_dict(include_provenance=True, include_metadata=True, include_id=True))
+        self.assertEqual(imported.get_schema_version(), new_schema_version)
+        self.assertNotEqual(records.Study.schema_version, new_schema_version)
