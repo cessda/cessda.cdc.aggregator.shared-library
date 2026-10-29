@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import unittest
+from unittest import mock
 
 from cdcagg_common import records
 
@@ -99,7 +100,8 @@ class TestStudy(unittest.TestCase):
         imported = records.Study(s.export_dict(include_provenance=True, include_metadata=True, include_id=True))
         self.assertEqual(imported.export_provenance_dict()['_direct_base_url'], 'some.url')
 
-    def test_imports_a_record_with_different_schema_version(self):
+    @mock.patch('kuha_common.document_store.records.warnings.warn')
+    def test_imports_a_record_with_different_schema_version(self, mock_warn):
         s = records.Study()
         new_schema_version = float(s.get_schema_version()) + 0.1
         s.set_schema_version(new_schema_version)
