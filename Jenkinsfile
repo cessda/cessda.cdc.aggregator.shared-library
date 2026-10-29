@@ -51,7 +51,7 @@ node(node_name) {
 
     // Assign parallel tasks
     tasks_1['Prepare Tox, Run With Coverage & Publish Report'] = {
-        docker.image('python:3.9').inside('-u root') {
+        docker.image('python:3.11').inside('-u root') {
             stage('Prepare Tox Venv') {
                 if (!fileExists(toxEnvName)) {
                     echo 'Build Python Virtualenv for testing...'
@@ -82,7 +82,7 @@ node(node_name) {
         }
     }
     tasks_1['Prepare Pylint, Run Analysis, Archive & Publish report'] = {
-        docker.image('python:3.9').inside('-u root') {
+        docker.image('python:3.11').inside('-u root') {
             stage('Prepare Pylint Venv') {
                 if (!fileExists(pylintEnvName)) {
                     echo 'Build Python Virtualenv for linting...'
@@ -111,8 +111,8 @@ node(node_name) {
             }
         }
     }
-    tasks_2['Run Tests py38'] = {
-        docker.image('python:3.8').inside('-u root') {
+    tasks_2['Run Tests py312'] = {
+        docker.image('python:3.12').inside('-u root') {
             stage('Prepare Tox Venv') {
                 if (!fileExists(toxEnvName)) {
                     echo 'Build Python Virtualenv for testing...'
@@ -127,7 +127,7 @@ node(node_name) {
             stage('Run Tests') {
                 sh """
                 . ./${toxEnvName}/bin/activate
-                tox -e py38
+                tox -e py312
                 """
             }
             stage('Clean up tox-env') {
@@ -147,8 +147,8 @@ node(node_name) {
             }
         }
     }
-    tasks_3['Run Tests py310'] = {
-        docker.image('python:3.10').inside('-u root') {
+    tasks_3['Run Tests py313'] = {
+        docker.image('python:3.13').inside('-u root') {
             stage('Prepare Tox Venv') {
                 if (!fileExists(toxEnvName)) {
                     echo 'Build Python Virtualenv for testing...'
@@ -163,7 +163,7 @@ node(node_name) {
             stage('Run Tests') {
                 sh """
                 . ./${toxEnvName}/bin/activate
-                tox -e py310
+                tox -e py313
                 """
             }
             stage('Clean up tox-env') {
@@ -173,8 +173,8 @@ node(node_name) {
             }
         }
     }
-    tasks_4['Run Tests py311'] = {
-        docker.image('python:3.11').inside('-u root') {
+    tasks_4['Run Tests py314'] = {
+        docker.image('python:3.14').inside('-u root') {
             stage('Prepare Tox Venv') {
                 if (!fileExists(toxEnvName)) {
                     echo 'Build Python Virtualenv for testing...'
@@ -189,7 +189,7 @@ node(node_name) {
             stage('Run Tests') {
                 sh """
                 . ./${toxEnvName}/bin/activate
-                tox -e py311
+                tox -e py314
                 """
             }
             stage('Clean up tox-env') {
@@ -199,8 +199,8 @@ node(node_name) {
             }
         }
     }
-    tasks_5['Run Tests py312'] = {
-        docker.image('python:3.12').inside('-u root') {
+    tasks_5['Run Tests py315'] = {
+        docker.image('python:3.15').inside('-u root') {
             stage('Prepare Tox Venv') {
                 if (!fileExists(toxEnvName)) {
                     echo 'Build Python Virtualenv for testing...'
