@@ -69,9 +69,10 @@ node(node_name) {
                 tox -e with-coverage
                 """
             }
-            stage('Publish Cobertura Report') {
-                cobertura(coberturaReportFile: "${coverage_xml_path}",
-                          zoomCoverageChart: false)
+            stage('Publish Coverage Report') {
+                recordCoverage(tools: [[parser: 'COBERTURA',
+                                        pattern:  "${coverage_xml_path}"]],
+                               sourceCodeRetention: 'LAST_BUILD')
             }
             stage('Clean up tox-env') {
                 if (fileExists(toxEnvName)) {
