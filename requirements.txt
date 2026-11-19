@@ -5,5 +5,4 @@ tornado==6.5.2
 
 # Direct
 # Kuha Common
-# TODO Use version when released
-git+https://gitlab.tuni.fi/fsd/kuha_common@ae743715d90c18768205d3e302645a774506659a#egg=kuha_common
+git+https://gitlab.tuni.fi/fsd/kuha_common@3.0.0#egg=kuha_common
